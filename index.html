@@ -1,12 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>CSS Card Library</title>
+  <link href="css/card-library/css/cardstarter.css" rel="stylesheet" type="text/css" />
+  <link href="css/main.css" rel="stylesheet" type="text/css" />
+  <script defer src="js/main.js"></script>
 </head>
+
 <body>
-    <h1>VIDEO-POKER-GAME</h1>
-    <h3>Project 1</h3>
+  <h3>Original Deck</h3>
+  <section id="original-deck-container" class="card-container"></section>
+  <button>RE-SHUFFLE DECK</button>
+  <h3>Shuffled Deck</h3>
+  <section id="shuffled-deck-container" class="card-container">
+  </section>
+
+  <section ></section>
+
+  <h1>VIDEO-POKER-GAME</h1>
+    <main>
+        <div class="pay-out-table">
+            <ul>
+                <li>ROYAL FLUSH</li>
+                <li>STRAIGHT FLUSH</li>
+                <li>FOUR OF A KIND</li>
+                <li>FULL HOUSE</li>
+                <li>FLUSH</li>
+                <li>STRAIGHT</li>
+                <li>THREE OF A KIND</li>
+                <li>TWO PAIR</li>
+                <li>JACKS OR BETTER</li>
+            </ul>
+            <ul>
+                <li>250</li>
+                <li>50</li>
+                <li>25</li>
+                <li>9</li>
+                <li>6</li>
+                <li>4</li>
+                <li>3</li>
+                <li>2</li>
+                <li>1</li>
+            </ul>
+            <ul>
+                <li>500</li>
+                <li>100</li>
+                <li>50</li>
+                <li>18</li>
+                <li>12</li>
+                <li>8</li>
+                <li>6</li>
+                <li>4</li>
+                <li>2</li>
+            </ul>
+            <ul>
+                <li>750</li>
+                <li>150</li>
+                <li>75</li>
+                <li>27</li>
+                <li>18</li>
+                <li>12</li>
+                <li>9</li>
+                <li>6</li>
+                <li>3</li>
+            </ul>
+            <ul>
+                <li>1000</li>
+                <li>200</li>
+                <li>100</li>
+                <li>36</li>
+                <li>24</li>
+                <li>16</li>
+                <li>12</li>
+                <li>8</li>
+                <li>4</li>
+            </ul>
+            <ul>
+                <li>1250</li>
+                <li>250</li>
+                <li>125</li>
+                <li>45</li>
+                <li>30</li>
+                <li>20</li>
+                <li>15</li>
+                <li>10</li>
+                <li>5</li>
+            </ul>
+        </div>
+        <div class="results-display">
+          <div class="results-message">TWO PAIR</div>
+        </div>
+        <div class="hold-display">
+          <div class="hold-window window-1">HOLD</div>
+          <div class="hold-window window-2">HOLD</div>
+          <div class="hold-window window-3">HOLD</div>
+          <div class="hold-window window-4">HOLD</div>
+          <div class="hold-window window-5">HOLD</div>
+        </div>
+        <div class="card-display">
+            <div id="card-1" class="card-container community-cards"></div>
+            <div id="card-2" class="card-container community-cards"></div>
+            <div id="card-3" class="card-container community-cards"></div>
+            <div id="card-4" class="card-container community-cards"></div>
+            <div id="card-5" class="card-container community-cards"></div>
+        </div>
+
+        <div class="wager-display">
+          <div class="bet-display">BET</div>
+          <div class="pay-out-display">2x5</div>
+          <div class="credits-display">CREDITS: <span class="credits-balance">100</span></div>
+        </div>
+        <div class="button-display">
+            <button class="min-bet-btn">BET ONE</button>
+            <button class="card1-hold">HOLD/CANCEL</button>
+            <button class="card2-hold">HOLD/CANCEL</button>
+            <button class="card3-hold">HOLD/CANCEL</button>
+            <button class="card4-hold">HOLD/CANCEL</button>
+            <button class="card5-hold">HOLD/CANCEL</button>
+            <button class="max-bet-btn">MAX BET</button>
+            <button class="deal-btn">DEAL/DRAW</button>
+        </div>
+    </main>
 </body>
+
 </html>

@@ -1,0 +1,77 @@
+* {
+  box-sizing: border-box;
+  border: 1px solid red;
+}
+body {
+  height: 100vh;
+  font-family: sans-serif;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  border: 4px dotted grey;
+  padding: 10px;
+  cursor: pointer;
+}
+
+button {
+  /* display: block;
+  margin: 10px auto;
+  padding: 10px;
+  font-size: 16px;
+  color: grey;
+  border: 1px solid grey;
+  border-radius: 4px;
+  outline: none; */
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: grey;
+  color: white;
+}
+
+.pay-out-table {
+  display: grid;
+  grid-template-columns: 4fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.card-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  place-items: center;
+}
+
+.card-display div {
+  width: 100px;
+  height: 100px;
+}
+
+.wager-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.hold-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  place-items: center;
+  height: 50px;
+}
+
+.hold-window {
+  color: white;
+}
+
+.button-display {
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.results-display {
+  display: grid;
+  place-items: center;
+}
