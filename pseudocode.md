@@ -1,4 +1,4 @@
-
+### Pseudocode
 - Create skeleton of game using wireframe as reference
 - Create buttons and relevant functions for buttons
 - Create generate card function
