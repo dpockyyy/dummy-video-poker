@@ -93,6 +93,8 @@ const maxBetBtn = document.querySelector('.max-bet-btn')
 const dealBtn = document.querySelector('.deal-btn')
 const holdBtns = document.querySelectorAll('.hold-btn')
 
+const payOutPanels = document.querySelectorAll('.pay-out-list')
+
 dealBtn.addEventListener('click', dealCards)
 playAgainBtn.addEventListener('click', handlePlayAgain)
 
@@ -121,7 +123,7 @@ function dealCards() {
   resultsMessage.textContent = ' '
   payOutDisplay.textContent = ' '
   gameOverMessage.style.display = 'none'
-  
+  boardDealtAudio()
   if (boardDealt === true) {
     dealFaceDownWithHold()
     resetGame()
@@ -145,6 +147,9 @@ function dealCards() {
       creditBalanceDisplay.textContent = creditBalance
       maxBetBtn.disabled = true
       minBetBtn.disabled = true
+      for (let i = 0; i < 5; i++) {
+        delayPanel(i)
+      }
     }
     else if (betAmount < 5) {
       if (gameOverStatus === true) {
@@ -156,6 +161,7 @@ function dealCards() {
     for (let i = 0; i < 6; i++) {
       delayDeal(i)
     }
+    clearHandRank()
     boardDealt = true
   }
 
@@ -163,17 +169,17 @@ function dealCards() {
 
 function delayDeal(i) {
   if (i === 5) {
-    setTimeout(function() {previewHand()}, 120*i)
+    setTimeout(function() {previewHand()}, 90*i)
   } else if (i < 5) {
-    setTimeout(function() {dealCard(shuffledDeck, communityCards[i])}, 120*i)
+    setTimeout(function() {dealCard(shuffledDeck, communityCards[i])}, 90*i)
   }
 }
 
 function delayDeal2(i) {
   if (i === 5) {
-    setTimeout(function() {checkResult()}, 90*i)
+    setTimeout(function() {checkResult()}, 70*i)
   } else if (i === 6) {
-    setTimeout(function() {removeHoldClass()}, 90*i)
+    setTimeout(function() {removeHoldClass()}, 70*i)
   } else if (i === 7) {
     setTimeout(function() {
       renderNewShuffledDeck()
@@ -181,7 +187,7 @@ function delayDeal2(i) {
     }, 90*i)
   } else if (i < 5) {
     if (!communityCards[i].classList.contains('hold')) {
-      setTimeout(function() {dealCard(shuffledDeck, communityCards[i])}, 90*i)
+      setTimeout(function() {dealCard(shuffledDeck, communityCards[i])}, 70*i)
     }
   }
 }
@@ -244,12 +250,15 @@ function handleCard1() {
   } else if (card1.classList.contains('hold')) {
     card1.classList.remove('hold')
     holdWindow[0].style.color = 'blue'
+    cardDefaultAudio()
   } else {
     card1.classList.add('hold')
     holdWindow[0].style.color = 'white'
+    cardDefaultAudio()
   }
 }
 function handleCard2() {
+  cardDefaultAudio()
   if (boardDealt === false) {
     handleMaxBet()
   } else if (card2.classList.contains('hold')) {
@@ -266,9 +275,11 @@ function handleCard3() {
   } else if (card3.classList.contains('hold')) {
     card3.classList.remove('hold')
     holdWindow[2].style.color = 'blue'
+    cardDefaultAudio()
   } else {
     card3.classList.add('hold')
     holdWindow[2].style.color = 'white'
+    cardDefaultAudio()
   }
 }
 function handleCard4() {
@@ -277,9 +288,11 @@ function handleCard4() {
   } else if (card4.classList.contains('hold')) {
     card4.classList.remove('hold')
     holdWindow[3].style.color = 'blue'
+    cardDefaultAudio()
   } else {
     card4.classList.add('hold')
     holdWindow[3].style.color = 'white'
+    cardDefaultAudio()
   }
 }
 function handleCard5() {
@@ -288,9 +301,11 @@ function handleCard5() {
   } else if (card5.classList.contains('hold')) {
     card5.classList.remove('hold')
     holdWindow[4].style.color = 'blue'
+    cardDefaultAudio()
   } else {
     card5.classList.add('hold')
     holdWindow[4].style.color = 'white'
+    cardDefaultAudio()
   }
 }
 
@@ -300,6 +315,8 @@ function previewHand() {
 }
 
 function handleMinBet() {
+  incrementBetAudio()
+  clearHandRank()
   if (gameOverStatus === true) {
     dealFaceDown()
     gameOverMessage.style.display = 'none'
@@ -307,6 +324,7 @@ function handleMinBet() {
     betAmount = 0
   }
   betAmount++
+  selectPanel()
   betAmountDisplay.textContent = betAmount
   creditBalance--
   creditBalanceDisplay.textContent = creditBalance
@@ -337,12 +355,19 @@ function checkResult() {
     creditBalance += betAmount * result.multi * 2
     creditBalanceDisplay.textContent = creditBalance
     resultsMessage.textContent = result.msg
+    if (result.multi >= 6) {
+      winAudio3()
+    } else if (result.multi >= 3) {
+      winAudio2()
+    } else {
+      winAudio()
+    }
+    showWinningHand(result)
   }
   gameOver()
 }
 
 function resetGame() {
-  // indexOfDeck = 0
   if (creditBalance < 5) {
     maxBetBtn.disabled = true
   } else {
@@ -359,7 +384,6 @@ function gameOver() {
   gameOverMessage.style.display = 'block'
   gameOverStatus = true
 }
-
 
 function createValueArr() {
   let arrV = []
@@ -399,31 +423,31 @@ function rankHand() {
   let suits = createSuitArr()
   let values = createValueArr()
   if (checkRoyal(suits, values)) {
-    let result = {msg: "ROYAL FLUSH", multi: 250}
+    let result = {msg: "ROYAL FLUSH", multi: 250, index: 0}
     return result
   } else if (checkStraightFlush(suits, values)) {
-    let result = {msg: "STRAIGHT FLUSH", multi: 50}
+    let result = {msg: "STRAIGHT FLUSH", multi: 50, index: 1}
     return result
   } else if (checkFourKind(values)) {
-    let result = {msg: "FOUR OF A KIND", multi: 25}
+    let result = {msg: "FOUR OF A KIND", multi: 25, index: 2}
     return result
   } else if (checkFullHouse(values)) {
-    let result = {msg: "FULL HOUSE", multi: 9}
+    let result = {msg: "FULL HOUSE", multi: 9, index: 3}
     return result
   } else if (checkFlush(suits)) {
-    let result = {msg: "FLUSH", multi: 6}
+    let result = {msg: "FLUSH", multi: 6, index: 4}
     return result
   } else if (checkStraight(values)) {
-    let result = {msg: "STRAIGHT", multi: 4}
+    let result = {msg: "STRAIGHT", multi: 4, index: 5}
     return result
   } else if (checkTrips(values)) {
-    let result = {msg: "THREE OF A KIND", multi: 3}
+    let result = {msg: "THREE OF A KIND", multi: 3, index: 6}
     return result
   } else if (checkTwoPair(values)) {
-    let result = {msg: "TWO PAIR", multi: 2}
+    let result = {msg: "TWO PAIR", multi: 2, index: 7}
     return result
   } else if(checkPair(values)) {
-    let result = {msg: "JACKS OR BETTER", multi: 1}
+    let result = {msg: "JACKS OR BETTER", multi: 1, index: 8}
     return result
   }
    else {
@@ -570,6 +594,73 @@ function handlePlayAgain() {
   creditBalanceDisplay.textContent = creditBalance
   setUpGame()
   resetGame()
+  clearPanels()
   gameOverStatus = false
   gameOverMessage.style.display = 'none'
+}
+
+const incrementBetSound = new Audio('sounds/incrementBetSound.mp3')
+const cardDefaultSound = new Audio('sounds/cardDealtSound2.mp3')
+const boardDealtSound = new Audio('sounds/boardDealtSound.mp3')
+const winSound = new Audio('sounds/winSound.mp3')
+const winSound2 = new Audio('sounds/winSound2.mp3')
+const winSound3 = new Audio('sounds/winSound3.mp3')
+
+function incrementBetAudio() {
+  incrementBetSound.play()
+}
+
+function cardDefaultAudio() {
+  cardDefaultSound.play()
+}
+
+function boardDealtAudio() {
+  boardDealtSound.play()
+}
+
+function winAudio() {
+  winSound.play()
+}
+
+function winAudio2() {
+  winSound2.play()
+}
+
+function winAudio3() {
+  winSound3.play()
+}
+
+function selectPanel() {
+  clearPanels()
+  payOutPanels[betAmount-1].style.backgroundColor = 'rgba(216,18,45,255)'
+}
+
+function selectPanelInput(panelNumber) {
+  clearPanels()
+  payOutPanels[panelNumber].style.backgroundColor = 'rgba(216,18,45,255)'
+}
+
+function clearPanels() {
+  for (let panel of payOutPanels) {
+    panel.style.backgroundColor = 'rgba(50,50,50,255)'
+  }
+}
+
+function delayPanel(i) {
+  setTimeout(function() {selectPanelInput(i)}, 100*i)
+}
+
+const handRanks = document.querySelectorAll('li')
+
+function showWinningHand(resultObj) {
+  clearHandRank()
+  let result = resultObj
+  handRanks[result.index].style.color = 'white'
+  handRanks[result.index + 9 * betAmount].style.color = 'white'
+}
+
+function clearHandRank() {
+  for (let hand of handRanks) {
+    hand.style.color = 'rgba(250,255,16,255)'
+  }
 }
