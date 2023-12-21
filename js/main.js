@@ -81,6 +81,7 @@ const betAmountDisplay = document.querySelector('.bet-amount')
 const creditBalanceDisplay = document.querySelector('.credits-balance')
 const payOutDisplay = document.querySelector('.pay-out-display')
 const gameOverMessage = document.querySelector('.game-over-message')
+const playAgainBtn = document.querySelector('.play-again')
 
 const minBetBtn = document.querySelector('.min-bet-btn')
 const card1Btn = document.querySelector('.card1-hold')
@@ -93,6 +94,7 @@ const dealBtn = document.querySelector('.deal-btn')
 const holdBtns = document.querySelectorAll('.hold-btn')
 
 dealBtn.addEventListener('click', dealCards)
+playAgainBtn.addEventListener('click', handlePlayAgain)
 
 let indexOfDeck = 0
 let creditBalance = 100
@@ -104,7 +106,6 @@ function dealCard(deck, container) {
   container.innerHTML = '';
   let cardsHtml = '';
   cardsHtml += `<div class="card ${deck[indexOfDeck].face}"></div>`;
-  
   container.innerHTML = cardsHtml;
   indexOfDeck++
 }
@@ -113,7 +114,6 @@ function dealFacedownCard(container) {
   container.innerHTML = '';
   let cardsHtml = '';
   cardsHtml += `<div class="card back-red"></div>`;
-  
   container.innerHTML = cardsHtml;
 }
 
@@ -123,16 +123,21 @@ function dealCards() {
   gameOverMessage.style.display = 'none'
   
   if (boardDealt === true) {
-    for (let card of communityCards) {
-      if (!card.classList.contains('hold')) {
-        dealCard(shuffledDeck, card)
-      }
+    dealFaceDownWithHold()
+    resetGame()
+    for (let btn of holdBtns) {
+      btn.disabled = true
     }
-    checkResult()
+    for (let i = 0; i < 8; i++) {
+      delayDeal2(i, indexOfDeck)
+    }
   } else {
+    removeHoldText()
     for (let btn of holdBtns) {
       btn.disabled = false
     }
+    minBetBtn.disabled = true
+    maxBetBtn.disabled = true
     if (betAmount === 0 || betAmount === 5) {
       betAmount = 5
       betAmountDisplay.textContent = betAmount
@@ -147,27 +152,63 @@ function dealCards() {
         creditBalanceDisplay.textContent = creditBalance
       }
     }
-    for (let card of communityCards) {
-      if (!card.classList.contains('hold')) {
-        dealCard(shuffledDeck, card)
-      }
+    dealFaceDown()
+    for (let i = 0; i < 6; i++) {
+      delayDeal(i)
     }
     boardDealt = true
   }
 
 }
 
-// checkResult()
+function delayDeal(i) {
+  if (i === 5) {
+    setTimeout(function() {previewHand()}, 120*i)
+  } else if (i < 5) {
+    setTimeout(function() {dealCard(shuffledDeck, communityCards[i])}, 120*i)
+  }
+}
 
-// dealCard(shuffledDeck, card1);
-// dealCard(shuffledDeck, card2);
-// dealCard(shuffledDeck, card3);
-// dealCard(shuffledDeck, card4);
-// dealCard(shuffledDeck, card5);
+function delayDeal2(i) {
+  if (i === 5) {
+    setTimeout(function() {checkResult()}, 90*i)
+  } else if (i === 6) {
+    setTimeout(function() {removeHoldClass()}, 90*i)
+  } else if (i === 7) {
+    setTimeout(function() {
+      renderNewShuffledDeck()
+      indexOfDeck = 0
+    }, 90*i)
+  } else if (i < 5) {
+    if (!communityCards[i].classList.contains('hold')) {
+      setTimeout(function() {dealCard(shuffledDeck, communityCards[i])}, 90*i)
+    }
+  }
+}
+
+function removeHoldClass() {
+  for (let card of communityCards) {
+    card.classList.remove('hold')
+  }
+}
+
+function removeHoldText() {
+  for (let window of holdWindow) {
+    window.style.color = 'blue'
+  }
+}
 
 function dealFaceDown() {
   for (let card of communityCards) {
     dealFacedownCard(card)
+  }
+}
+
+function dealFaceDownWithHold() {
+  for (let card of communityCards) {
+    if (!card.classList.contains('hold')) {
+      dealFacedownCard(card)
+    }
   }
 }
 
@@ -176,16 +217,11 @@ function setUpGame() {
   for (let btn of holdBtns) {
     btn.disabled = true
   }
+  betAmount = 0
+  betAmountDisplay.textContent = betAmount
 }
 
 setUpGame()
-
-
-// dealCard1(originalDeck, card1);
-// dealCard2(originalDeck, card2);
-// dealCard3(originalDeck, card3);
-// dealCard4(originalDeck, card4);
-// dealCard5(originalDeck, card5);
 
 card1.addEventListener('click', handleCard1)
 card2.addEventListener('click', handleCard2)
@@ -258,13 +294,16 @@ function handleCard5() {
   }
 }
 
+function previewHand() {
+  let previewResult = rankHand()
+  resultsMessage.textContent = previewResult.msg
+}
+
 function handleMinBet() {
   if (gameOverStatus === true) {
     dealFaceDown()
     gameOverMessage.style.display = 'none'
     gameOverStatus = false
-  }
-  if (betAmount === 5) {
     betAmount = 0
   }
   betAmount++
@@ -286,8 +325,6 @@ function handleMaxBet() {
       betAmount = 5
     }
   }
-  // creditBalance -= difference
-  // creditBalanceDisplay.textContent = creditBalance
   dealCards()
   maxBetBtn.disabled = true
   minBetBtn.disabled = true
@@ -302,30 +339,25 @@ function checkResult() {
     resultsMessage.textContent = result.msg
   }
   gameOver()
-  resetGame()
 }
 
 function resetGame() {
-  renderNewShuffledDeck()
-  for (let card of communityCards) {
-    card.classList.remove('hold')
+  // indexOfDeck = 0
+  if (creditBalance < 5) {
+    maxBetBtn.disabled = true
+  } else {
+    maxBetBtn.disabled = false
   }
-  for (let window of holdWindow) {
-    window.style.color = 'blue'
-  }
- 
-  indexOfDeck = 0
-  maxBetBtn.disabled = false
   minBetBtn.disabled = false
   boardDealt = false
+  if (creditBalance <= 0) {
+    playAgainBtn.style.display = 'block'
+  }
 }
 
 function gameOver() {
   gameOverMessage.style.display = 'block'
   gameOverStatus = true
-  for (let btn of holdBtns) {
-    btn.disabled = true
-  }
 }
 
 
@@ -532,43 +564,12 @@ function checkDupes(valueArr) {
   return false
 }
 
-
-// function dealCard1(deck, container) {
-//   container.innerHTML = '';
-//   let cardsHtml = '';
-//   cardsHtml += `<div class="card ${deck[9].face}"></div>`;
-
-//   container.innerHTML = cardsHtml;
-// }
-
-// function dealCard2(deck, container) {
-//   container.innerHTML = '';
-//   let cardsHtml = '';
-//   cardsHtml += `<div class="card ${deck[22].face}"></div>`;
-
-//   container.innerHTML = cardsHtml;
-// }
-
-// function dealCard3(deck, container) {
-//   container.innerHTML = '';
-//   let cardsHtml = '';
-//   cardsHtml += `<div class="card ${deck[18].face}"></div>`;
-
-//   container.innerHTML = cardsHtml;
-// }
-
-// function dealCard4(deck, container) {
-//   container.innerHTML = '';
-//   let cardsHtml = '';
-//   cardsHtml += `<div class="card ${deck[3].face}"></div>`;
-
-//   container.innerHTML = cardsHtml;
-// }
-
-// function dealCard5(deck, container) {
-//   container.innerHTML = '';
-//   let cardsHtml = '';
-//   cardsHtml += `<div class="card ${deck[19].face}"></div>`;
-
-//   container.innerHTML = cardsHtml;
-// }
+function handlePlayAgain() {
+  playAgainBtn.style.display = 'none'
+  creditBalance = 100
+  creditBalanceDisplay.textContent = creditBalance
+  setUpGame()
+  resetGame()
+  gameOverStatus = false
+  gameOverMessage.style.display = 'none'
+}

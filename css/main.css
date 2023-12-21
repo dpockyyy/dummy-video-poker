@@ -11,34 +11,21 @@ body {
 
 h1 {
   background-color: black;
-  height: 5vw;
+  color: white;
+  height: 2vw;
+  padding: 0.5vw;
 }
 
 .card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  /* border: 4px dotted grey;
-  padding: 10px; */
   cursor: pointer;
 }
 
 button {
-  /* display: block;
-  margin: 10px auto;
-  padding: 10px;
-  font-size: 16px;
-  color: grey;
-  border: 1px solid grey;
-  border-radius: 4px;
-  outline: none; */
   cursor: pointer;
 }
-
-/* button:hover {
-  background-color: grey;
-  color: white;
-} */
 
 .pay-out-table {
   display: grid;
@@ -50,8 +37,15 @@ button {
 }
 
 .pay-out-table ul {
-  border: 2px solid #efef00;
-  font-size: 1vw;
+  border: 4px solid #efef00;
+  font-size: 1.5vw;
+  font-weight: bold;
+  border-right: none;
+  padding: 0.5vw;
+}
+
+.pay-out-table ul:last-child {
+  border-right: 4px solid #efef00;
 }
 
 .card-display {
@@ -70,8 +64,14 @@ button {
 .wager-display div {
   font-size: 2vw;
   width: 100%;
+  color: #efef00;
+  font-weight: bold;
+  padding: 0.5vw;
 }
 
+.pay-out-display {
+  text-align: center;
+}
 
 .credits-display {
   text-align: right;
@@ -86,19 +86,31 @@ button {
 .hold-window {
   color: blue;
   align-self: end;
+  font-weight: bold;
+  font-size: 1.5vw;
 }
 
 .button-display {
   display: grid;
   place-items: center;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  height: 4vw;
-  padding: 0.2vw;
+  height: 6vw;
+  padding: 0.5vw;
+  background-color: gray;
+  margin-top: 1vw;
+  border-radius: 0.5vw;
 }
 
 .button-display button {
   height: 90%;
   border-radius: 0.5vw;
+  font-size: 1.4vw;
+  width: 80%;
+  font-weight: bold;
+}
+
+.top-line-border {
+  border-top: 2px solid black;
 }
 
 .results-display {
@@ -110,6 +122,8 @@ button {
 
 .results-message {
   font-size: 2vw;
+  color: #efef00;
+  font-weight: bold;
 }
 
 .card-container {
@@ -122,7 +136,7 @@ button {
 
 .game-window {
   position: relative;
-  width: 65%;
+  width: 66%;
 }
  
 ul {
@@ -144,15 +158,33 @@ ul {
   width: 90%;
   background-color: blue;
   border-radius: 0.5vw;
-  padding: 0.5vw;
+  padding: 1vw;
 }
 
 .game-over-message {
   position: absolute;
   transform: translate(-50%, -50%);
-  top: 70%;
+  top: 69%;
   left: 50%;
   font-size: 2vw;
   background-color: blue;
   display: none;
+  color: #efef00;
+  font-weight: bold;
+  border-radius: 0.5vw;
+  padding: 0.5vw;
 }
+
+.replay-game-message {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+.play-again {
+  font-size: 100px;
+  border-radius: 0.5vw;
+  display: none;
+}
+
