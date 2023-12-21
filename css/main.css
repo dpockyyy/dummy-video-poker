@@ -1,18 +1,25 @@
 * {
   box-sizing: border-box;
-  border: 1px solid red;
+  margin: 0 auto;
 }
+
 body {
   height: 100vh;
   font-family: sans-serif;
+  background-color: black;
+}
+
+h1 {
+  background-color: black;
+  height: 5vw;
 }
 
 .card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  border: 4px dotted grey;
-  padding: 10px;
+  /* border: 4px dotted grey;
+  padding: 10px; */
   cursor: pointer;
 }
 
@@ -28,14 +35,23 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+/* button:hover {
   background-color: grey;
   color: white;
-}
+} */
 
 .pay-out-table {
   display: grid;
   grid-template-columns: 4fr 1fr 1fr 1fr 1fr 1fr;
+  margin: 0.5em;
+  background-color: #323232;
+  color: #efef00;
+  margin-top: -0.5vw;
+}
+
+.pay-out-table ul {
+  border: 2px solid #efef00;
+  font-size: 1vw;
 }
 
 .card-display {
@@ -44,34 +60,99 @@ button:hover {
   place-items: center;
 }
 
-.card-display div {
-  width: 100px;
-  height: 100px;
-}
 
 .wager-display {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  height: 2.5vw;
+}
+
+.wager-display div {
+  font-size: 2vw;
+  width: 100%;
+}
+
+
+.credits-display {
+  text-align: right;
 }
 
 .hold-display {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   place-items: center;
-  height: 50px;
 }
 
 .hold-window {
-  color: white;
+  color: blue;
+  align-self: end;
 }
 
 .button-display {
   display: grid;
   place-items: center;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  height: 4vw;
+  padding: 0.2vw;
+}
+
+.button-display button {
+  height: 90%;
+  border-radius: 0.5vw;
 }
 
 .results-display {
   display: grid;
   place-items: center;
+  padding: 0.5em;
+  height: 2.5vw;
+}
+
+.results-message {
+  font-size: 2vw;
+}
+
+.card-container {
+  font-size: 2.78vw;
+}
+
+.hidden-decks {
+  display: none;
+}
+
+.game-window {
+  position: relative;
+  width: 65%;
+}
+ 
+ul {
+  list-style-type: none;
+  padding-inline-start: 0px;
+  padding: 1px;
+}
+
+.hand-ranking-list {
+  width: 100%;
+}
+
+.pay-out-list {
+  width: 100%;
+  text-align: right;
+}
+
+.screen-window {
+  width: 90%;
+  background-color: blue;
+  border-radius: 0.5vw;
+  padding: 0.5vw;
+}
+
+.game-over-message {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 70%;
+  left: 50%;
+  font-size: 2vw;
+  background-color: blue;
+  display: none;
 }

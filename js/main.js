@@ -66,7 +66,6 @@ function buildOriginalDeck() {
   return deck;
 }
 
-
 renderNewShuffledDeck();
 
 const card1 = document.getElementById('card-1')
@@ -77,6 +76,12 @@ const card5 = document.getElementById('card-5')
 const communityCards = document.querySelectorAll('.community-cards')
 const holdWindow = document.querySelectorAll('.hold-window')
 
+const resultsMessage = document.querySelector('.results-message')
+const betAmountDisplay = document.querySelector('.bet-amount')
+const creditBalanceDisplay = document.querySelector('.credits-balance')
+const payOutDisplay = document.querySelector('.pay-out-display')
+const gameOverMessage = document.querySelector('.game-over-message')
+
 const minBetBtn = document.querySelector('.min-bet-btn')
 const card1Btn = document.querySelector('.card1-hold')
 const card2Btn = document.querySelector('.card2-hold')
@@ -85,10 +90,16 @@ const card4Btn = document.querySelector('.card4-hold')
 const card5Btn = document.querySelector('.card5-hold')
 const maxBetBtn = document.querySelector('.max-bet-btn')
 const dealBtn = document.querySelector('.deal-btn')
+const holdBtns = document.querySelectorAll('.hold-btn')
 
 dealBtn.addEventListener('click', dealCards)
 
 let indexOfDeck = 0
+let creditBalance = 100
+let betAmount = 0
+let boardDealt = false
+let gameOverStatus = false
+
 function dealCard(deck, container) {
   container.innerHTML = '';
   let cardsHtml = '';
@@ -98,13 +109,84 @@ function dealCard(deck, container) {
   indexOfDeck++
 }
 
+function dealFacedownCard(container) {
+  container.innerHTML = '';
+  let cardsHtml = '';
+  cardsHtml += `<div class="card back-red"></div>`;
+  
+  container.innerHTML = cardsHtml;
+}
+
 function dealCards() {
-  for (let card of communityCards) {
-    if (!card.classList.contains('hold')) {
-      dealCard(shuffledDeck, card)
+  resultsMessage.textContent = ' '
+  payOutDisplay.textContent = ' '
+  gameOverMessage.style.display = 'none'
+  
+  if (boardDealt === true) {
+    for (let card of communityCards) {
+      if (!card.classList.contains('hold')) {
+        dealCard(shuffledDeck, card)
+      }
     }
+    checkResult()
+  } else {
+    for (let btn of holdBtns) {
+      btn.disabled = false
+    }
+    if (betAmount === 0 || betAmount === 5) {
+      betAmount = 5
+      betAmountDisplay.textContent = betAmount
+      creditBalance -= betAmount
+      creditBalanceDisplay.textContent = creditBalance
+      maxBetBtn.disabled = true
+      minBetBtn.disabled = true
+    }
+    else if (betAmount < 5) {
+      if (gameOverStatus === true) {
+        creditBalance -= betAmount
+        creditBalanceDisplay.textContent = creditBalance
+      }
+    }
+    for (let card of communityCards) {
+      if (!card.classList.contains('hold')) {
+        dealCard(shuffledDeck, card)
+      }
+    }
+    boardDealt = true
+  }
+
+}
+
+// checkResult()
+
+// dealCard(shuffledDeck, card1);
+// dealCard(shuffledDeck, card2);
+// dealCard(shuffledDeck, card3);
+// dealCard(shuffledDeck, card4);
+// dealCard(shuffledDeck, card5);
+
+function dealFaceDown() {
+  for (let card of communityCards) {
+    dealFacedownCard(card)
   }
 }
+
+function setUpGame() {
+  dealFaceDown()
+  for (let btn of holdBtns) {
+    btn.disabled = true
+  }
+}
+
+setUpGame()
+
+
+// dealCard1(originalDeck, card1);
+// dealCard2(originalDeck, card2);
+// dealCard3(originalDeck, card3);
+// dealCard4(originalDeck, card4);
+// dealCard5(originalDeck, card5);
+
 card1.addEventListener('click', handleCard1)
 card2.addEventListener('click', handleCard2)
 card3.addEventListener('click', handleCard3)
@@ -117,69 +199,134 @@ card3Btn.addEventListener('click', handleCard3)
 card4Btn.addEventListener('click', handleCard4)
 card5Btn.addEventListener('click', handleCard5)
 
+minBetBtn.addEventListener('click', handleMinBet)
+maxBetBtn.addEventListener('click', handleMaxBet)
+
 function handleCard1() {
-  if (card1.classList.contains('hold')) {
+  if (boardDealt === false) {
+    handleMaxBet()
+  } else if (card1.classList.contains('hold')) {
     card1.classList.remove('hold')
-    holdWindow[0].style.color = 'white'
+    holdWindow[0].style.color = 'blue'
   } else {
     card1.classList.add('hold')
-    holdWindow[0].style.color = 'black'
-
+    holdWindow[0].style.color = 'white'
   }
 }
-
 function handleCard2() {
-  if (card2.classList.contains('hold')) {
+  if (boardDealt === false) {
+    handleMaxBet()
+  } else if (card2.classList.contains('hold')) {
     card2.classList.remove('hold')
-    holdWindow[1].style.color = 'white'
+    holdWindow[1].style.color = 'blue'
   } else {
     card2.classList.add('hold')
-    holdWindow[1].style.color = 'black'
+    holdWindow[1].style.color = 'white'
   }
 }
-
 function handleCard3() {
-  if (card3.classList.contains('hold')) {
+  if (boardDealt === false) {
+    handleMaxBet()
+  } else if (card3.classList.contains('hold')) {
     card3.classList.remove('hold')
-    holdWindow[2].style.color = 'white'
+    holdWindow[2].style.color = 'blue'
   } else {
     card3.classList.add('hold')
-    holdWindow[2].style.color = 'black'
+    holdWindow[2].style.color = 'white'
   }
 }
-
 function handleCard4() {
-  if (card4.classList.contains('hold')) {
+  if (boardDealt === false) {
+    handleMaxBet()
+  } else if (card4.classList.contains('hold')) {
     card4.classList.remove('hold')
-    holdWindow[3].style.color = 'white'
+    holdWindow[3].style.color = 'blue'
   } else {
     card4.classList.add('hold')
-    holdWindow[3].style.color = 'black'
+    holdWindow[3].style.color = 'white'
   }
 }
-
 function handleCard5() {
-  if (card5.classList.contains('hold')) {
+  if (boardDealt === false) {
+    handleMaxBet()
+  } else if (card5.classList.contains('hold')) {
     card5.classList.remove('hold')
-    holdWindow[4].style.color = 'white'
+    holdWindow[4].style.color = 'blue'
   } else {
     card5.classList.add('hold')
-    holdWindow[4].style.color = 'black'
+    holdWindow[4].style.color = 'white'
   }
 }
 
+function handleMinBet() {
+  if (gameOverStatus === true) {
+    dealFaceDown()
+    gameOverMessage.style.display = 'none'
+    gameOverStatus = false
+  }
+  if (betAmount === 5) {
+    betAmount = 0
+  }
+  betAmount++
+  betAmountDisplay.textContent = betAmount
+  creditBalance--
+  creditBalanceDisplay.textContent = creditBalance
+  if (betAmount === 5) {
+    minBetBtn.disabled = true
+    maxBetBtn.disabled = true
+  }
+}
 
-// dealCard(shuffledDeck, card1);
-// dealCard(shuffledDeck, card2);
-// dealCard(shuffledDeck, card3);
-// dealCard(shuffledDeck, card4);
-// dealCard(shuffledDeck, card5);
+function handleMaxBet() {
+  if (betAmount !== 5) {
+    if (gameOverStatus === true) {
+      betAmount = 5
+    } else {
+      creditBalance += betAmount
+      betAmount = 5
+    }
+  }
+  // creditBalance -= difference
+  // creditBalanceDisplay.textContent = creditBalance
+  dealCards()
+  maxBetBtn.disabled = true
+  minBetBtn.disabled = true
+}
 
-dealCard1(originalDeck, card1);
-dealCard2(originalDeck, card2);
-dealCard3(originalDeck, card3);
-dealCard4(originalDeck, card4);
-dealCard5(originalDeck, card5);
+function checkResult() {
+  let result = rankHand()
+  if (result.multi != 0) {
+    payOutDisplay.textContent = `WIN 2 x ${betAmount*result.multi}`
+    creditBalance += betAmount * result.multi * 2
+    creditBalanceDisplay.textContent = creditBalance
+    resultsMessage.textContent = result.msg
+  }
+  gameOver()
+  resetGame()
+}
+
+function resetGame() {
+  renderNewShuffledDeck()
+  for (let card of communityCards) {
+    card.classList.remove('hold')
+  }
+  for (let window of holdWindow) {
+    window.style.color = 'blue'
+  }
+ 
+  indexOfDeck = 0
+  maxBetBtn.disabled = false
+  minBetBtn.disabled = false
+  boardDealt = false
+}
+
+function gameOver() {
+  gameOverMessage.style.display = 'block'
+  gameOverStatus = true
+  for (let btn of holdBtns) {
+    btn.disabled = true
+  }
+}
 
 
 function createValueArr() {
@@ -220,26 +367,36 @@ function rankHand() {
   let suits = createSuitArr()
   let values = createValueArr()
   if (checkRoyal(suits, values)) {
-    return 'royal flush'
+    let result = {msg: "ROYAL FLUSH", multi: 250}
+    return result
   } else if (checkStraightFlush(suits, values)) {
-    return 'straight flush'
+    let result = {msg: "STRAIGHT FLUSH", multi: 50}
+    return result
   } else if (checkFourKind(values)) {
-    return 'four of a kind'
+    let result = {msg: "FOUR OF A KIND", multi: 25}
+    return result
   } else if (checkFullHouse(values)) {
-    return 'full house'
+    let result = {msg: "FULL HOUSE", multi: 9}
+    return result
   } else if (checkFlush(suits)) {
-    return 'flush'
+    let result = {msg: "FLUSH", multi: 6}
+    return result
   } else if (checkStraight(values)) {
-    return 'straight'
+    let result = {msg: "STRAIGHT", multi: 4}
+    return result
   } else if (checkTrips(values)) {
-    return 'three of a kind'
+    let result = {msg: "THREE OF A KIND", multi: 3}
+    return result
   } else if (checkTwoPair(values)) {
-    return 'two pair'
+    let result = {msg: "TWO PAIR", multi: 2}
+    return result
   } else if(checkPair(values)) {
-    return 'pair'
+    let result = {msg: "JACKS OR BETTER", multi: 1}
+    return result
   }
    else {
-    return 'sadge'
+    let result = {msg: '', multi: 0}
+    return result
   }
 }
 
@@ -250,7 +407,7 @@ function checkRoyal(suitArr, valueArr) {
     }
   }
   for (let value of valueArr) {
-    if (value === '10' || value === '11' || value === '12' || value === '13' || value === '01') {
+    if (value === '10' || value === '11' || value === '12' || value === '13' || value === '14') {
       continue
     }
     else {
@@ -376,42 +533,42 @@ function checkDupes(valueArr) {
 }
 
 
-function dealCard1(deck, container) {
-  container.innerHTML = '';
-  let cardsHtml = '';
-  cardsHtml += `<div class="card ${deck[9].face}"></div>`;
+// function dealCard1(deck, container) {
+//   container.innerHTML = '';
+//   let cardsHtml = '';
+//   cardsHtml += `<div class="card ${deck[9].face}"></div>`;
 
-  container.innerHTML = cardsHtml;
-}
+//   container.innerHTML = cardsHtml;
+// }
 
-function dealCard2(deck, container) {
-  container.innerHTML = '';
-  let cardsHtml = '';
-  cardsHtml += `<div class="card ${deck[8].face}"></div>`;
+// function dealCard2(deck, container) {
+//   container.innerHTML = '';
+//   let cardsHtml = '';
+//   cardsHtml += `<div class="card ${deck[22].face}"></div>`;
 
-  container.innerHTML = cardsHtml;
-}
+//   container.innerHTML = cardsHtml;
+// }
 
-function dealCard3(deck, container) {
-  container.innerHTML = '';
-  let cardsHtml = '';
-  cardsHtml += `<div class="card ${deck[10].face}"></div>`;
+// function dealCard3(deck, container) {
+//   container.innerHTML = '';
+//   let cardsHtml = '';
+//   cardsHtml += `<div class="card ${deck[18].face}"></div>`;
 
-  container.innerHTML = cardsHtml;
-}
+//   container.innerHTML = cardsHtml;
+// }
 
-function dealCard4(deck, container) {
-  container.innerHTML = '';
-  let cardsHtml = '';
-  cardsHtml += `<div class="card ${deck[11].face}"></div>`;
+// function dealCard4(deck, container) {
+//   container.innerHTML = '';
+//   let cardsHtml = '';
+//   cardsHtml += `<div class="card ${deck[3].face}"></div>`;
 
-  container.innerHTML = cardsHtml;
-}
+//   container.innerHTML = cardsHtml;
+// }
 
-function dealCard5(deck, container) {
-  container.innerHTML = '';
-  let cardsHtml = '';
-  cardsHtml += `<div class="card ${deck[25].face}"></div>`;
+// function dealCard5(deck, container) {
+//   container.innerHTML = '';
+//   let cardsHtml = '';
+//   cardsHtml += `<div class="card ${deck[19].face}"></div>`;
 
-  container.innerHTML = cardsHtml;
-}
+//   container.innerHTML = cardsHtml;
+// }
