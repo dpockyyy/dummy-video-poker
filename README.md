@@ -1,4 +1,4 @@
-#PROJECT #1 - Video Poker
+# PROJECT #1 - Video Poker
 Video poker first became commercially viable when it became economical to combine a television like monitor with a solid state central processing unit and first appeared in the mid 1970s. Thoughout the 1980s video poker became increasingly popular in casinos and nowadays is a popular option in many casinos. My project is a remake of the classic casino game video poker with an increased payout rate for your gaming enjoyment. 
 
 ![Alt text](image.png)
